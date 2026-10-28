@@ -6,6 +6,6 @@ A tiny SwiftUI iPhone app with one liquid-glass-style **test** button. Tapping i
 
 1. Push this repository to GitHub.
 2. Open **Actions → Build iOS app → Run workflow**.
-3. Download the `tuff-test-ios` artifact from the completed run.
+3. Download `tuff-test.ipa` from the `tuff-test-ipa` artifact on the completed run.
 
-The workflow builds an unsigned iOS device app and packages `TuffTest.app` in a ZIP. Installing it on a device requires signing; this workflow does not require signing secrets.
+The workflow builds an unsigned iOS device app and packages it in the standard IPA `Payload` layout. Installing it on a device requires signing; this workflow does not require signing secrets.
