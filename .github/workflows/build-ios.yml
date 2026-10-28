@@ -1,0 +1,28 @@
+name: Build iOS app
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build unsigned iOS app
+        run: |
+          xcodebuild \
+            -project TuffTest.xcodeproj \
+            -scheme TuffTest \
+            -configuration Release \
+            -sdk iphoneos \
+            -derivedDataPath build/DerivedData \
+            CODE_SIGNING_ALLOWED=NO \
+            build
+      - name: Package app
+        run: |
+          cd build/DerivedData/Build/Products/Release-iphoneos
+          /usr/bin/zip -r "$GITHUB_WORKSPACE/tuff-test-ios.zip" TuffTest.app
+      - uses: actions/upload-artifact@v4
+        with:
+          name: tuff-test-ios
+          path: tuff-test-ios.zip
