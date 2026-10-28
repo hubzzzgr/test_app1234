@@ -3,7 +3,9 @@
 <plist version="1.0">
 <dict>
     <key>CFBundleDisplayName</key><string>tuff test</string>
+    <key>CFBundleExecutable</key><string>$(EXECUTABLE_NAME)</string>
     <key>CFBundleIdentifier</key><string>com.tufftest.app</string>
+    <key>CFBundleInfoDictionaryVersion</key><string>6.0</string>
     <key>CFBundleName</key><string>tuff test</string>
     <key>CFBundlePackageType</key><string>APPL</string>
     <key>CFBundleShortVersionString</key><string>1.0</string>

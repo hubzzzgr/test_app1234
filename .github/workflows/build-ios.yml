@@ -18,13 +18,24 @@ jobs:
             -derivedDataPath build/DerivedData \
             CODE_SIGNING_ALLOWED=NO \
             build
+      - name: Verify app executable
+        run: |
+          app_path="build/DerivedData/Build/Products/Release-iphoneos/TuffTest.app"
+          plutil -lint "$app_path/Info.plist"
+          executable_name=$(/usr/libexec/PlistBuddy -c 'Print :CFBundleExecutable' "$app_path/Info.plist")
+          test -n "$executable_name"
+          test -x "$app_path/$executable_name"
+          lipo -verify_arch arm64 "$app_path/$executable_name"
       - name: Package unsigned IPA
         run: |
           mkdir -p build/ipa/Payload
           cp -R build/DerivedData/Build/Products/Release-iphoneos/TuffTest.app build/ipa/Payload/
           cd build/ipa
           /usr/bin/zip -r "$GITHUB_WORKSPACE/tuff-test.ipa" Payload
-      - uses: actions/upload-artifact@v4
+          /usr/bin/unzip -t "$GITHUB_WORKSPACE/tuff-test.ipa"
+      - name: Upload IPA directly
+        uses: actions/upload-artifact@v7
         with:
-          name: tuff-test-ipa
           path: tuff-test.ipa
+          archive: false
+          if-no-files-found: error
