@@ -1,6 +1,7 @@
 import SwiftUI
 import AVFoundation
 import UIKit
+import Combine
 
 @main
 struct TuffTestApp: App {
@@ -13,7 +14,7 @@ struct TuffTestApp: App {
 }
 
 struct ContentView: View {
-    @State private var torch = TorchController()
+    @StateObject private var torch = TorchController()
 
     var body: some View {
         ZStack {
@@ -92,20 +93,23 @@ final class TorchController: ObservableObject {
     private func pulse(_ device: AVCaptureDevice) {
         do {
             try device.lockForConfiguration()
+            defer { device.unlockForConfiguration() }
             try device.setTorchModeOn(level: 1.0)
-            device.unlockForConfiguration()
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.18) { [weak self] in
-                guard let self else { return }
-                try? device.lockForConfiguration()
-                device.torchMode = .off
-                device.unlockForConfiguration()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.18) {
+                self.turnOff(device)
             }
         } catch {
-            if device.isLockedForConfiguration == false {
-                try? device.lockForConfiguration()
-                device.torchMode = .off
-                device.unlockForConfiguration()
-            }
+            return
+        }
+    }
+
+    private func turnOff(_ device: AVCaptureDevice) {
+        do {
+            try device.lockForConfiguration()
+            defer { device.unlockForConfiguration() }
+            device.torchMode = .off
+        } catch {
+            return
         }
     }
 }
