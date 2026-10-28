@@ -25,7 +25,7 @@ jobs:
           executable_name=$(/usr/libexec/PlistBuddy -c 'Print :CFBundleExecutable' "$app_path/Info.plist")
           test -n "$executable_name"
           test -x "$app_path/$executable_name"
-          lipo -verify_arch arm64 "$app_path/$executable_name"
+          lipo "$app_path/$executable_name" -verify_arch arm64
       - name: Package unsigned IPA
         run: |
           mkdir -p build/ipa/Payload
